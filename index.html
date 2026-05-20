@@ -1,0 +1,891 @@
+<index.html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>低空启航 · 雨燕计划AI+VR实训平台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+            scroll-behavior: smooth;
+        }
+        body {
+            background: #0a1428;
+            color: #e0e6f0;
+            line-height: 1.6;
+        }
+        header {
+            background: rgba(16, 32, 64, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #1f3a66;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #40c0ff;
+        }
+        .logo span { color: #ffc107; }
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        nav a {
+            color: #e0e6f0;
+            text-decoration: none;
+        }
+        nav a:hover { color: #40c0ff; }
+        .menu-btn {
+            display: none;
+            font-size: 1.8rem;
+            color: #40c0ff;
+            cursor: pointer;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 5%;
+        }
+        .section-title {
+            font-size: 2rem;
+            color: #40c0ff;
+            margin-bottom: 2rem;
+            border-left: 4px solid #ffc107;
+            padding-left: 1rem;
+        }
+        .card {
+            background: rgba(25, 45, 85, 0.8);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid #1f3a66;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(64, 192, 255, 0.2);
+        }
+        .btn {
+            background: linear-gradient(135deg, #40c0ff, #007acc);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .btn:hover { opacity: 0.9; transform: scale(1.05); }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #40c0ff;
+            color: #40c0ff;
+        }
+        .hero {
+            background: linear-gradient(135deg, #0a1428, #192f55);
+            padding: 6rem 5%;
+            text-align: center;
+        }
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+        .hero h1 span { color: #40c0ff; }
+        .hero p {
+            font-size: 1.2rem;
+            color: #b0c4de;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+        }
+        .ai-section { padding: 4rem 5%; }
+        .ai-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+        .ai-chat {
+            height: 400px;
+            background: rgba(15, 30, 60, 0.9);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid #1f3a66;
+            display: flex;
+            flex-direction: column;
+        }
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 1rem;
+        }
+        .ai-message {
+            background: rgba(64, 192, 255, 0.15);
+            padding: 0.8rem;
+            border-radius: 8px;
+            margin-bottom: 0.8rem;
+            max-width: 80%;
+        }
+        .user-message {
+            background: rgba(255, 193, 7, 0.15);
+            padding: 0.8rem;
+            border-radius: 8px;
+            margin-bottom: 0.8rem;
+            max-width: 80%;
+            margin-left: auto;
+        }
+        .chat-input { display: flex; gap: 0.5rem; }
+        .chat-input input {
+            flex: 1;
+            padding: 0.8rem;
+            border-radius: 8px;
+            background: rgba(25, 45, 85, 0.8);
+            border: 1px solid #1f3a66;
+            color: white;
+        }
+        .ai-dashboard {
+            display: grid;
+            grid-template-rows: 1fr 1fr;
+            gap: 1rem;
+        }
+        .skill-radar, .learning-stats {
+            background: rgba(25, 45, 85, 0.8);
+            border-radius: 12px;
+            padding: 1rem;
+            border: 1px solid #1f3a66;
+        }
+        .vr-section {
+            padding: 4rem 5%;
+            background: rgba(16, 32, 64, 0.5);
+        }
+        .vr-container {
+            display: grid;
+            grid-template-columns: 3fr 1fr;
+            gap: 2rem;
+        }
+        .vr-display {
+            height: 500px;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+        #vrImage {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: opacity 0.3s ease;
+        }
+        .vr-scene-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .scene-item {
+            background: rgba(25, 45, 85, 0.8);
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid #1f3a66;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .scene-item:hover { background: rgba(64, 192, 255, 0.2); }
+        .scene-item.active {
+            background: rgba(64, 192, 255, 0.3);
+            border-color: #40c0ff;
+        }
+        .eval-section { padding: 4rem 5%; }
+        .eval-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+        .eval-card { text-align: center; }
+        .eval-score {
+            font-size: 3rem;
+            color: #40c0ff;
+            margin: 1rem 0;
+        }
+        .course-section {
+            padding: 4rem 5%;
+            background: rgba(16, 32, 64, 0.5);
+        }
+        .course-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+        .course-card h3 { color: #ffc107; margin-bottom: 1rem; }
+        .eco-section { padding: 4rem 5%; }
+        .eco-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+        .eco-card h3 { color: #40c0ff; margin-bottom: 1rem; }
+        .user-center { display: none; padding: 4rem 5%; }
+        .user-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+        }
+        .user-info { text-align: center; }
+        .avatar {
+            width: 120px;
+            height: 120px;
+            background: #40c0ff;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: white;
+        }
+        .record-item, .cert-item, .eval-record {
+            padding: 1rem;
+            border-left: 3px solid #40c0ff;
+            margin-bottom: 1rem;
+            background: rgba(25,45,85,0.5);
+        }
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal {
+            background: #102040;
+            width: 90%; max-width: 450px;
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid #1f3a66;
+            position: relative;
+        }
+        .modal-close {
+            position: absolute;
+            top: 1rem; right: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #ccc;
+        }
+        .tab-buttons {
+            display: flex;
+            margin-bottom: 1rem;
+            gap: 0.5rem;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 0.8rem;
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+        }
+        .tab-btn.active { border-color: #40c0ff; color: #40c0ff; }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; }
+        .form-group input {
+            width: 100%;
+            padding: 0.8rem;
+            border-radius: 6px;
+            background: #192d55;
+            border: 1px solid #1f3a66;
+            color: white;
+        }
+        .form-error {
+            color: #ff4444;
+            font-size: 0.85rem;
+            display: none;
+        }
+        .login-form, .register-form { display: none; }
+        .login-form.active, .register-form.active { display: block; }
+        .detail-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .detail-modal .modal-content {
+            background: #102040;
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid #1f3a66;
+            max-width: 600px;
+            width: 90%;
+        }
+        .detail-modal .modal-close {
+            float: right;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #ccc;
+        }
+        .detail-modal ul { margin-left: 1.5rem; margin-top: 0.5rem; }
+        footer {
+            background: #0a1428;
+            padding: 2rem 5%;
+            text-align: center;
+            border-top: 1px solid #1f3a66;
+            color: #7a8cb0;
+        }
+        @media (max-width: 992px) {
+            .ai-grid, .vr-container, .user-grid { grid-template-columns: 1fr; }
+            .eval-grid, .course-grid, .eco-grid { grid-template-columns: repeat(2,1fr); }
+        }
+        @media (max-width: 768px) {
+            nav ul {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 100%; left: 0;
+                width: 100%;
+                background: rgba(16,32,64,0.98);
+                padding: 1rem 5%;
+                border-bottom: 1px solid #1f3a66;
+            }
+            nav ul.show { display: flex; }
+            .menu-btn { display: block; }
+            .hero h1 { font-size: 2.5rem; }
+            .eval-grid, .course-grid, .eco-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">雨燕计划 <span>低空教培平台</span></div>
+        <nav>
+            <ul id="navMenu">
+                <li><a href="#ai">AI辅助教学</a></li>
+                <li><a href="#vr">VR实训</a></li>
+                <li><a href="#eval">AI考评</a></li>
+                <li><a href="#course">三阶课程</a></li>
+                <li><a href="#eco">政校企生态</a></li>
+                <li><a href="javascript:openUserCenter()" class="btn">个人中心</a></li>
+                <li><a href="javascript:openModal()" class="btn btn-outline">登录/注册</a></li>
+            </ul>
+            <div class="menu-btn" id="menuBtn">☰</div>
+        </nav>
+    </header>
+
+    <div id="mainPage">
+        <section class="hero">
+            <h1>低空启航 · 雨燕计划<br><span>AI+VR 无人机教培独家平台</span></h1>
+            <p>三阶合规课程 · 虚实融合实训 · AI动态考评 · 政校企生态赋能<br>打造低空人才培育标杆，赋能产业高质量发展</p>
+            <button class="btn" id="heroBtn">立即体验VR实训</button>
+        </section>
+
+        <section id="ai" class="ai-section">
+            <div class="container">
+                <h2 class="section-title">AI辅助教学系统 · 智能赋能</h2>
+                <div class="ai-grid">
+                    <div class="ai-chat">
+                        <div class="chat-messages" id="chatMessages">
+                            <div class="ai-message">你好！我是雨燕AI教练，已为你生成个性化学习路径。当前重点：空域申请流程与应急处置。</div>
+                            <div class="user-message">老师，我想练习电力巡检场景的飞行技巧</div>
+                            <div class="ai-message">好的！已为你切换至电力巡检专项训练。重点难点：超低空稳定悬停、障碍物规避、缺陷识别。</div>
+                        </div>
+                        <div class="chat-input">
+                            <input type="text" id="chatInput" placeholder="输入你的问题...">
+                            <button class="btn" id="sendBtn">发送</button>
+                        </div>
+                    </div>
+                    <div class="ai-dashboard">
+                        <div class="skill-radar"><h3>技能雷达图</h3></div>
+                        <div class="learning-stats">
+                            <h3>学习数据</h3>
+                            <p>今日学习：2.5小时</p>
+                            <p>实操时长：1.8小时</p>
+                            <p>理论正确率：89%</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="vr" class="vr-section">
+            <div class="container">
+                <h2 class="section-title">VR沉浸式实训平台 · 虚实融合</h2>
+                <div class="vr-container">
+                    <div class="vr-display">
+                        <img id="vrImage" src="https://picsum.photos/id/96/1280/720" alt="VR场景演示">
+                    </div>
+                    <div class="vr-scene-list">
+                        <div class="scene-item" data-img="https://picsum.photos/id/96/1280/720" data-name="基础飞行训练">✅ 基础飞行训练</div>
+                        <div class="scene-item" data-img="https://picsum.photos/id/1048/1280/720" data-name="物流配送场景">📦 物流配送场景</div>
+                        <div class="scene-item" data-img="https://picsum.photos/id/180/1280" data-name="电力巡检场景">⚡ 电力巡检场景</div>
+                        <div class="scene-item" data-img="https://picsum.photos/id/102/1280/720" data-name="农业植保场景">🌾 农业植保场景</div>
+                        <div class="scene-item" data-img="https://picsum.photos/id/301/1280/720" data-name="应急救援场景">🚨 应急救援场景</div>
+                        <div class="scene-item" data-img="https://picsum.photos/id/1056/1280/720" data-name="极端天气模拟">🌧️ 极端天气模拟</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="eval" class="eval-section">
+            <div class="container">
+                <h2 class="section-title">AI动态考评系统 · 全周期量化</h2>
+                <div class="eval-grid">
+                    <div class="card eval-card">
+                        <h3>操作精度</h3>
+                        <div class="eval-score" id="scorePrecision">--</div>
+                        <p>航线精准度、悬停稳定性、起降标准度</p>
+                    </div>
+                    <div class="card eval-card">
+                        <h3>飞行效率</h3>
+                        <div class="eval-score" id="scoreEfficiency">--</div>
+                        <p>任务完成速度、路径优化、能耗控制</p>
+                    </div>
+                    <div class="card eval-card">
+                        <h3>合规安全</h3>
+                        <div class="eval-score" id="scoreSafety">--</div>
+                        <p>空域遵守、禁飞规避、应急处置、安全规范</p>
+                    </div>
+                </div>
+                <div style="text-align:center;margin-top:2rem;">
+                    <button class="btn" id="startEvalBtn">重新测评当前场景</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="course" class="course-section">
+            <div class="container">
+                <h2 class="section-title">三阶合规课程体系 · 从入门到上岗</h2>
+                <div class="course-grid">
+                    <div class="card course-card">
+                        <h3>基础合规层（1个月）</h3>
+                        <ul>
+                            <li>低空法规与空域管理</li>
+                            <li>无人机安全飞行规范</li>
+                            <li>执照考试全流程备考</li>
+                            <li>基础操控与应急处置</li>
+                        </ul>
+                        <button class="btn">查看详情</button>
+                    </div>
+                    <div class="card course-card">
+                        <h3>专业技能层（2个月）</h3>
+                        <ul>
+                            <li>物流配送专项实训</li>
+                            <li>电力巡检专项实训</li>
+                            <li>农业植保专项实训</li>
+                            <li>测绘航测专项实训</li>
+                        </ul>
+                        <button class="btn">查看详情</button>
+                    </div>
+                    <div class="card course-card">
+                        <h3>岗位实战层（1个月）</h3>
+                        <ul>
+                            <li>企业真实项目实操</li>
+                            <li>行业导师一对一指导</li>
+                            <li>上岗考核与就业推荐</li>
+                            <li>CAAC执照取证辅导</li>
+                        </ul>
+                        <button class="btn">查看详情</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="eco" class="eco-section">
+            <div class="container">
+                <h2 class="section-title">政校企协同生态 · 全周期赋能</h2>
+                <div class="eco-grid">
+                    <div class="card eco-card">
+                        <h3>政府端（G端）</h3>
+                        <p>政策支持、空域开放、资质授权、补贴申报、监管对接</p>
+                    </div>
+                    <div class="card eco-card">
+                        <h3>学校端（S端）</h3>
+                        <p>课程嵌入、学分认证、实训基地、师资共享、人才输送</p>
+                    </div>
+                    <div class="card eco-card">
+                        <h3>企业端（E端）</h3>
+                        <p>定制培训、人才招聘、项目外包、技术合作、就业通道</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div id="userCenter" class="user-center">
+        <div class="container">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;">
+                <h2 class="section-title" style="margin:0;">个人中心</h2>
+                <button class="btn" onclick="backToMain()">返回首页</button>
+            </div>
+            <div class="user-grid">
+                <div class="card user-info">
+                    <div class="avatar">飞</div>
+                    <h3>飞行学员</h3>
+                    <p>无人机驾驶专业</p>
+                    <p>学习进度：68%</p>
+                </div>
+                <div>
+                    <div class="card" style="margin-bottom:2rem;">
+                        <h3 style="color:#40c0ff;margin-bottom:1rem;">学习记录</h3>
+                        <div id="recordList"></div>
+                    </div>
+                    <div class="card" style="margin-bottom:2rem;">
+                        <h3 style="color:#40c0ff;margin-bottom:1rem;">测评记录</h3>
+                        <div id="evalList"></div>
+                        <button class="btn" style="margin-top:1rem;" onclick="exportReport()">导出测评报告</button>
+                    </div>
+                    <div class="card">
+                        <h3 style="color:#40c0ff;margin-bottom:1rem;">我的证书</h3>
+                        <div id="certList"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="authModal">
+        <div class="modal">
+            <div class="modal-close" onclick="closeModal()">×</div>
+            <div class="tab-buttons">
+                <button class="tab-btn active" onclick="switchTab('login')">登录</button>
+                <button class="tab-btn" onclick="switchTab('register')">注册</button>
+            </div>
+            <form class="login-form active" id="loginForm">
+                <div class="form-group">
+                    <label>账号</label>
+                    <input type="text" id="loginUser" placeholder="请输入账号">
+                    <div class="form-error" id="loginUserErr">请输入账号</div>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="loginPwd" placeholder="请输入密码">
+                    <div class="form-error" id="loginPwdErr">请输入密码</div>
+                </div>
+                <button class="btn" style="width:100%;margin-top:0.5rem;">登录</button>
+            </form>
+            <form class="register-form" id="registerForm">
+                <div class="form-group">
+                    <label>账号</label>
+                    <input type="text" id="regUser" placeholder="请输入账号">
+                    <div class="form-error" id="regUserErr">请输入账号</div>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="regPwd" placeholder="请输入密码">
+                    <div class="form-error" id="regPwdErr">密码至少6位</div>
+                </div>
+                <div class="form-group">
+                    <label>确认密码</label>
+                    <input type="password" id="regPwd2" placeholder="请确认密码">
+                    <div class="form-error" id="regPwd2Err">两次密码不一致</div>
+                </div>
+                <button class="btn" style="width:100%;margin-top:0.5rem;">注册</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="detail-modal" id="detailModal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeDetailModal()">×</span>
+            <h3 id="modalTitle"></h3>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2025 低空启航 · 雨燕计划AI+VR实训平台 | 重庆理工大学第二届低空经济创新设计大赛无人机教培商业模式创新项目</p>
+    </footer>
+
+    <script>
+        // 全局存储测评记录
+        let evalRecords = [];
+
+        // 1. 基础交互
+        const menuBtn = document.getElementById('menuBtn');
+        const navMenu = document.getElementById('menuBtn').parentElement.querySelector('ul');
+        menuBtn.addEventListener('click', () => navMenu.classList.toggle('show'));
+
+        document.getElementById('heroBtn').addEventListener('click', () => {
+            document.getElementById('vr').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            header.style.background = window.scrollY > 50 ? 'rgba(16,32,64,0.98)' : 'rgba(16,32,64,0.95)';
+        });
+
+        // 2. AI聊天
+        const sendBtn = document.getElementById('sendBtn');
+        const chatInput = document.getElementById('chatInput');
+        const chatMessages = document.getElementById('chatMessages');
+        sendBtn.addEventListener('click', sendMsg);
+        chatInput.addEventListener('keydown', e => e.key === 'Enter' && sendMsg());
+        function sendMsg() {
+            const t = chatInput.value.trim();
+            if (!t) return;
+            const um = document.createElement('div');
+            um.className = 'user-message';
+            um.textContent = t;
+            chatMessages.appendChild(um);
+            setTimeout(() => {
+                const am = document.createElement('div');
+                am.className = 'ai-message';
+                am.textContent = '已为您匹配训练内容，可前往VR实训区练习！';
+                chatMessages.appendChild(am);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 700);
+            chatInput.value = '';
+        }
+
+        // 3. 测评：按场景给分
+        function getScoreByScene(sceneName) {
+            const map = {
+                '基础飞行训练': { p:92, e:88, s:95 },
+                '物流配送场景': { p:88, e:94, s:91 },
+                '电力巡检场景': { p:95, e:85, s:97 },
+                '农业植保场景': { p:90, e:90, s:93 },
+                '应急救援场景': { p:85, e:80, s:98 },
+                '极端天气模拟': { p:80, e:75, s:99 }
+            };
+            return map[sceneName] || { p:90, e:88, s:92 };
+        }
+
+        function animate(el, from, to, dur=800) {
+            const st = Date.now();
+            const tick = () => {
+                const t = Math.min(1, (Date.now()-st)/dur);
+                el.textContent = Math.round(from + (to-from)*t);
+                if (t<1) requestAnimationFrame(tick);
+            };
+            tick();
+        }
+
+        function runEval(sceneName) {
+            const btn = document.getElementById('startEvalBtn');
+            btn.disabled = true;
+            btn.textContent = '测评中...';
+
+            document.getElementById('scorePrecision').textContent = '--';
+            document.getElementById('scoreEfficiency').textContent = '--';
+            document.getElementById('scoreSafety').textContent = '--';
+
+            setTimeout(() => {
+                const s = getScoreByScene(sceneName);
+                animate(document.getElementById('scorePrecision'), 0, s.p);
+                animate(document.getElementById('scoreEfficiency'), 0, s.e);
+                animate(document.getElementById('scoreSafety'), 0, s.s);
+
+                const now = new Date().toLocaleString();
+                evalRecords.unshift({ scene: sceneName, p: s.p, e: s.e, s: s.s, time: now });
+                if (evalRecords.length > 10) evalRecords.pop();
+                updateEvalList();
+
+                btn.textContent = '重新测评当前场景';
+                btn.disabled = false;
+            }, 1200);
+        }
+
+        function updateEvalList() {
+            const list = document.getElementById('evalList');
+            list.innerHTML = evalRecords.map(item =>
+                `<div class="eval-record">${item.time} · ${item.scene} · 精度${item.p} · 效率${item.e} · 安全${item.s}</div>`
+            ).join('');
+        }
+
+        // 4. 正式版导出测评报告（答辩打印友好）
+        function exportReport() {
+            if (evalRecords.length === 0) {
+                alert('暂无测评记录，请先完成VR测评！');
+                return;
+            }
+            const total = evalRecords.length;
+            let avgP = 0, avgE = 0, avgS = 0;
+            evalRecords.forEach(item => {
+                avgP += item.p; avgE += item.e; avgS += item.s;
+            });
+            avgP = Math.round(avgP / total);
+            avgE = Math.round(avgE / total);
+            avgS = Math.round(avgS / total);
+            const avgTotal = Math.round((avgP + avgE + avgS) / 3);
+
+            let txt = `
+====================================================
+          雨燕计划 · AI+VR无人机实训报告
+====================================================
+项目名称：低空经济无人机教培实训平台
+测评人：飞行学员
+生成时间：${new Date().toLocaleString()}
+测评次数：${total} 次
+
+----------------------------------------------------
+            一、历次测评明细
+----------------------------------------------------
+`;
+            evalRecords.forEach((item, idx) => {
+                txt += `测评${idx+1}｜${item.time}｜场景：${item.scene}\n`;
+                txt += `  操作精度：${item.p} 分\n`;
+                txt += `  飞行效率：${item.e} 分\n`;
+                txt += `  合规安全：${item.s} 分\n`;
+                txt += `  综合得分：${Math.round((item.p+item.e+item.s)/3)} 分\n\n`;
+            });
+
+            txt += `
+----------------------------------------------------
+            二、能力综合分析
+----------------------------------------------------
+平均操作精度：${avgP} 分
+平均飞行效率：${avgE} 分
+平均合规安全：${avgS} 分
+综合能力评分：${avgTotal} 分
+
+能力等级：${avgTotal >= 90 ? '优秀' : avgTotal >= 80 ? '良好' : '合格'}
+
+----------------------------------------------------
+            三、实训总结
+----------------------------------------------------
+本报告基于AI动态考评系统自动生成，
+数据来源于VR沉浸式实训飞行行为分析。
+系统通过操作精度、飞行效率、合规安全
+三维度量化评估低空飞行核心能力，
+可作为低空人才培养与就业推荐依据。
+
+====================================================
+`;
+            const blob = new Blob([txt], {type:'text/plain;charset=utf-8'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `雨燕计划_实训报告_${Date.now()}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+            alert('✅ 正式测评报告已导出！\n可直接打开、打印、答辩展示。');
+        }
+
+        // 5. VR切换
+        const sceneItems = document.querySelectorAll('.scene-item');
+        const vrImage = document.getElementById('vrImage');
+        let currentSceneName = '基础飞行训练';
+        sceneItems[0].classList.add('active');
+
+        sceneItems.forEach(item => {
+            item.addEventListener('click', () => {
+                sceneItems.forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+                currentSceneName = item.dataset.name;
+
+                vrImage.style.opacity = '0.5';
+                vrImage.src = item.dataset.img;
+                vrImage.onload = () => vrImage.style.opacity = '1';
+
+                runEval(currentSceneName);
+            });
+        });
+
+        document.getElementById('startEvalBtn').addEventListener('click', () => {
+            runEval(currentSceneName);
+        });
+
+        // 6. 登录/注册
+        document.getElementById('loginForm').addEventListener('submit', e => {
+            e.preventDefault();
+            alert('演示：登录成功');
+            closeModal();
+        });
+        document.getElementById('registerForm').addEventListener('submit', e => {
+            e.preventDefault();
+            alert('演示：注册成功');
+            switchTab('login');
+        });
+        function openModal() { document.getElementById('authModal').style.display = 'flex'; }
+        function closeModal() { document.getElementById('authModal').style.display = 'none'; }
+        function switchTab(t) {
+            document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active',i===(t==='login'?0:1)));
+            document.querySelector('.login-form').classList.toggle('active',t==='login');
+            document.querySelector('.register-form').classList.toggle('active',t==='register');
+        }
+
+        // 7. 个人中心
+        function loadUserCenter() {
+            const recordList = document.getElementById('recordList');
+            const certList = document.getElementById('certList');
+            recordList.innerHTML = `
+                <div class="record-item">基础飞行训练 · 完成度 100%</div>
+                <div class="record-item">电力巡检实训 · 完成度 80%</div>
+                <div class="record-item">法规理论课程 · 完成度 90%</div>
+            `;
+            certList.innerHTML = `
+                <div class="cert-item">CAAC无人机驾驶员合格证（有效）</div>
+                <div class="cert-item">低空安全操作认证（有效）</div>
+            `;
+        }
+
+        function openUserCenter() {
+            document.getElementById('mainPage').style.display = 'none';
+            document.getElementById('userCenter').style.display = 'block';
+            loadUserCenter();
+        }
+
+        function backToMain() {
+            document.getElementById('userCenter').style.display = 'none';
+            document.getElementById('mainPage').style.display = 'block';
+        }
+
+        // 8. 详情弹窗
+        function openDetailModal(title, content) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalBody').innerHTML = content;
+            document.getElementById('detailModal').style.display = 'flex';
+        }
+        function closeDetailModal() {
+            document.getElementById('detailModal').style.display = 'none';
+        }
+
+        document.querySelectorAll('.course-card .btn').forEach((btn, idx) => {
+            const details = [
+                `<p><strong>学习周期：</strong>1个月</p><ul><li>低空法规与空域</li><li>无人机安全飞行</li><li>执照备考</li><li>基础操控</li></ul>`,
+                `<p><strong>学习周期：</strong>2个月</p><ul><li>物流配送实训</li><li>电力巡检实训</li><li>农业植保实训</li><li>测绘航测实训</li></ul>`,
+                `<p><strong>学习周期：</strong>1个月</p><ul><li>企业项目实操</li><li>导师一对一</li><li>上岗考核</li><li>CAAC取证辅导</li></ul>`
+            ];
+            const names = ['基础合规层','专业技能层'];
+            btn.addEventListener('click', () => openDetailModal(names[idx], details[idx]));
+        });
+
+        document.querySelectorAll('.eval-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const title = card.querySelector('h3').textContent;
+                const score = card.querySelector('.eval-score').textContent;
+                openDetailModal(`${title} 分析`, `<p>得分：${score}</p>`);
+            });
+        });
+
+        document.querySelectorAll('.eco-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const title = card.querySelector('h3').textContent;
+                openDetailModal(title, `<p>${card.querySelector('p').textContent}</p>`);
+            });
+        });
+
+        // 初始
+        window.addEventListener('load', () => {
+            runEval(currentSceneName);
+        });
+    </script>
+
+</body>
+</html>
